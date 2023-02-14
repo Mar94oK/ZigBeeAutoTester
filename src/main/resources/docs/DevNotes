@@ -1,0 +1,6 @@
+1) Check what is it
+OpenJDK 64-Bit Server VM warning: You have loaded library /tmp/jSerialComm/2.9.3/libjSerialComm.so which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+
+And try to fix like written here
+https://stackoverflow.com/questions/22345891/stack-guard-might-have-disabled
