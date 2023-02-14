@@ -8,10 +8,12 @@ import org.springframework.context.annotation.Scope;
 @Configuration
 public class ZigbeeTestPresetConstructor {
 
+    private final ZigbeeTestPreset preset = new ZigbeeTestPreset();
+
     @Bean
     @Scope("singleton")
     public ZigbeeTestPreset getPreset() {
-        return new ZigbeeTestPreset();
+        return preset;
     }
 
 

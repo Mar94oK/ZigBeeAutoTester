@@ -1,6 +1,7 @@
 package com.zigbee.zigbeeautotester.api;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.zigbee.zigbeeautotester.model.LogExpectedPattern;
 import com.zigbee.zigbeeautotester.model.ZigbeeTestPreset;
 import com.zigbee.zigbeeautotester.service.ZigBeeAutoTesterService;
 import lombok.extern.log4j.Log4j2;
@@ -23,7 +24,6 @@ public class ZigBeeAutoTesterController {
 
     @GetMapping("/api/v1.0/zat/greetings")
     public String sayHello() {
-
         return "Hello, I am ZigBee Automated Tester!";
 
     }
@@ -31,12 +31,11 @@ public class ZigBeeAutoTesterController {
 
     @GetMapping("/api/v1.0/zat/dev/availablePorts")
     public List<String> getAllCOMPorts() {
-
         List<String> result = new ArrayList<>();
 
         SerialPort[] ports = SerialPort.getCommPorts();
 
-        for (SerialPort port: ports) {
+        for (SerialPort port : ports) {
             result.add(port.getSystemPortName());
         }
 
@@ -45,23 +44,21 @@ public class ZigBeeAutoTesterController {
 
     @GetMapping("/api/v1.0/zat/dev/presets")
     public ZigbeeTestPreset getPresets() {
-
         return testPreset;
 
     }
 
     @PostMapping("/api/v1.0/zat/presets/port")
     public boolean setZigBeeHubLogPort(@RequestParam("port_name") String portName) {
-
         List<String> result = new ArrayList<>();
 
         SerialPort[] ports = SerialPort.getCommPorts();
 
-        for (SerialPort port: ports) {
+        for (SerialPort port : ports) {
             result.add(port.getSystemPortName());
         }
 
-        log.info("Port Name: {}",  portName);
+        log.info("Port Name: {}", portName);
 
         if (result.contains(portName)) {
             testPreset.setExpectedSerialPort(portName);
@@ -70,6 +67,14 @@ public class ZigBeeAutoTesterController {
 
         return false;
     }
+
+
+    @PostMapping("/api/v1.0/zat/presets/logPatterns")
+    public void setZigBeeHubLogPatterns(@RequestBody List<LogExpectedPattern> patterns) {
+        testPreset.setLogTestPatterns(patterns);
+
+    }
+
 
     @PostMapping("/api/v1.0/zat/start")
     public ZigbeeTestPreset startTests() {

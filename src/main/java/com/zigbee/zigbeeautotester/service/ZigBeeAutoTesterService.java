@@ -21,13 +21,16 @@ public class ZigBeeAutoTesterService {
 
     public void StartTest() {
 
-        var future = CompletableFuture.supplyAsync(()-> {
+        var future = CompletableFuture.supplyAsync(() -> {
             try {
                 return ZigBeeHubLogsReader();
             } catch (IOException e) {
                 return 0;
             }
-        }).thenApply(result -> {log.info("Port was closed"); return 0;} );
+        }).thenApply(result -> {
+            log.info("Port was closed");
+            return 0;
+        });
 
     }
 
@@ -35,8 +38,7 @@ public class ZigBeeAutoTesterService {
     private double ZigBeeHubLogsReader() throws IOException {
 
         SerialPort comPort = null;
-        for (var port : SerialPort.getCommPorts())
-        {
+        for (var port : SerialPort.getCommPorts()) {
             log.info("Current Port: {} Preset Port: {}", port.getSystemPortName(), testPreset.getExpectedSerialPort());
             if (port.getSystemPortName().equals(testPreset.getExpectedSerialPort())) {
                 comPort = port;
@@ -54,24 +56,25 @@ public class ZigBeeAutoTesterService {
         comPort.openPort();
         comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 0, 0);
         comPort.setFlowControl(SerialPort.FLOW_CONTROL_DISABLED);
-        InputStream in = comPort.getInputStream();
+
         double readBytes = 0;
-        try
-        {
-            String current = "";
+        try (InputStream in = comPort.getInputStream()) {
+            StringBuilder current = new StringBuilder();
             while (true) {
-                var ch = (char)in.read();
-                current += ch;
+                var ch = (char) in.read();
+                current.append(ch);
                 if (ch == '\n') {
-                    log.info(current);
-                    current = "";
+                    log.info(current.toString());
+                    current = new StringBuilder();
                 }
                 readBytes++;
             }
+        } catch (IOException exp) {
+            exp.printStackTrace();
+        } finally {
+            comPort.closePort();
+        }
 
-        } catch (Exception e) { e.printStackTrace(); }
-        in.close();
-        comPort.closePort();
         return readBytes;
     }
 
