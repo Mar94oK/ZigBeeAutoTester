@@ -1,0 +1,8 @@
+1. HelloWorld ---> OK
+2. Connection To Serial Port
+3. Logs Printer To File (COM to File)
+4. UserData. Logs Pattern SetUp (Provide logs to wait for)
+5. UserData. WiFi Credentials (To Connect Remote Controller)
+6. Connector to Remote Controller
+7. SetUp of Remote Controller
+8. UserData. Test Pattern { Actions; Expected Logs; Number of repeats; Timeouts }
